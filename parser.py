@@ -4,11 +4,13 @@ each protein's pdb ID, chain, and hierarchy
 '''
 
 import json
+import re
 from itertools import islice
 
 # Each protein has a pdb id and a chain
 class Protein:
-    def __init__(self, pdb, chain):
+    def __init__(self, u_id, pdb, chain):
+        self.u_id = u_id
         self.pdb = pdb
         self.chain = chain
 
@@ -21,38 +23,37 @@ def data():
             line = (line.replace('"', '')).split("\t")
 
             # Get the values in specific columns
-            f_id, pdb, chain = line[3], line[4], line[5]
-            arch_name, x_name, h_name, t_name, f_name = line[8], line[9], line[10], line[11], line[12]
+            u_id, f_id, pdb, chain = line[0], line[3], line[4], line[5]
+
+            # Some proteins have multiple chains designated as a "." that must be read from the pdb range column
+            if chain == '.':
+                chain = line[6]
+                chain = re.split(':|,', chain)
+                chain = ','.join([chain[i] for i in range(len(chain)) if i%2 == 0])
+
             x_level, h_level, t_level = f_id.split(".")[0], f_id.split(".")[1], f_id.split(".")[2]
 
             # Some f_id do not have a F group
-            if len(f_id.split(".")) == 4:
-                f_level = f_id.split(".")[3]
-            else:
-                f_level = "None"
+            f_level = f_id.split(".")[3] if len(f_id.split(".")) == 4 else "None"
 
-            if arch_name not in proteins:
-                proteins[arch_name] = {}
-
-            # Each key has 2 values: the name of the family and a dictionary of the other levels
             # Create X-level (is not dependent on other levels)
-            if x_level not in proteins[arch_name]:
-                proteins[arch_name][x_level] = [x_name, {}]
+            if x_level not in proteins:
+                proteins[x_level] = {}
 
             # Create H level which is dependent on X level
-            if h_level not in proteins[arch_name][x_level][1]:
-                proteins[arch_name][x_level][1][h_level] = [h_name, {}]
+            if h_level not in proteins[x_level]:
+                proteins[x_level][h_level] = {}
 
             # Create T level which is dependent on X level and H level
-            if t_level not in proteins[arch_name][x_level][1][h_level][1]:
-                proteins[arch_name][x_level][1][h_level][1][t_level] = [t_name, {}]
+            if t_level not in proteins[x_level][h_level]:
+                proteins[x_level][h_level][t_level] = {}
 
             # Create F level which is dependent on X level, H level, and T level
-            if f_level not in proteins[arch_name][x_level][1][h_level][1][t_level][1]:
-                proteins[arch_name][x_level][1][h_level][1][t_level][1][f_level] = [f_name, []]
+            if f_level not in proteins[x_level][h_level][t_level]:
+                proteins[x_level][h_level][t_level][f_level] = []
 
             # Add each protein's information to the dict
-            proteins[arch_name][x_level][1][h_level][1][t_level][1][f_level][1].append(Protein(pdb, chain).__dict__)
+            proteins[x_level][h_level][t_level][f_level].append(Protein(u_id, pdb, chain).__dict__)
 
     return proteins
 
