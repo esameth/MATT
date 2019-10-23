@@ -1,5 +1,5 @@
 '''
-Goes through the hierarchy of each protein and will create a multifasta file of all proteins within the level
+Goes through the hierarchy of each protein and will create a directory of all proteins within the level
 '''
 
 import json
@@ -11,19 +11,43 @@ def openFile():
         loaded_json = json.load(f)
     return loaded_json
 
-# Go through the dictionary to create the directories based on hierarchy level name
-def getLevel(proteins):
-    for arch, arch_value in proteins.items():
-        for x, x_value in arch_value.items():
-            for h, h_value in x_value[1].items():
-                for t, t_value in h_value[1].items():
-                    for f, f_value in t_value[1].items():
-                        if not os.path.exists(os.path.join(arch, x_value[0], h_value[0], t_value[0], f_value[0])):
-                            os.makedirs(os.path.join(arch, x_value[0], h_value[0], t_value[0], f_value[0]))
+# Create the directories based on f_id
+def makeDir(path):
+    if not os.path.exists(path):
+        os.makedirs(os.path.join(path, 'sequences'))
+
+def getID(f_dict, path):
+    path = os.path.join(path, "sequences")
+    u_idList = []
+    for protein in f_dict:
+        u_idList.append(protein['u_id'])
+
+    makeFasta(u_idList, path)
+
+def makeFasta(u_idList, path):
+    with open('../../Downloads/ecod.latest.fasta.txt', 'r') as infile, open(os.path.join(path, 'multifasta.txt'), 'a+') as outfile:
+        currentLine = ""
+        for line in infile:
+            if line.startswith('>'):
+                for u_id in u_idList:
+                    if u_id in currentLine:
+                        outfile.write(currentLine)
+                currentLine = ""
+            currentLine += line
+
+# Go through the dictionary
+def parseDict(proteins):
+    for x, x_dict in proteins.items():
+        for h, h_dict in x_dict.items():
+            for t, t_dict in h_dict.items():
+                for f, f_dict in t_dict.items():
+                    path = os.path.join(x, h, t, f)
+                    makeDir(path)
+                    getID(f_dict, path)
 
 def main():
     proteins = openFile()
-    getLevel(proteins)
+    parseDict(proteins)
 
 
 if __name__ == "__main__":
