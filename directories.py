@@ -35,11 +35,31 @@ def makeFasta(u_idList, path):
                 currentLine = ""
             currentLine += line
 
+def makeFasta(u_idList, path, last=True):
+    with open('../../Downloads/ecod.latest.fasta.txt', 'r') as infile, open(os.path.join(path, 'multifasta.txt'), 'a+') as outfile:
+        if last:
+            currentLine = ""
+            for line in infile:
+                if line.startswith('>'):
+                    for u_id in u_idList:
+                        if u_id in currentLine:
+                            outfile.write(currentLine)
+                    currentLine = ""
+                currentLine += line
+        else:
+            outfile.close()
+
 # Go through the dictionary
 def parseDict(proteins):
     for x, x_dict in proteins.items():
+        makeDir(os.path.join(x))
+        makeFasta(None, os.path.join(x, "sequences"), False)
         for h, h_dict in x_dict.items():
+            makeDir(os.path.join(x, h))
+            makeFasta(None, os.path.join(x, h, "sequences"), False)
             for t, t_dict in h_dict.items():
+                makeDir(os.path.join(x, h, t))
+                makeFasta(None, os.path.join(x, h, t, "sequences"), False)
                 for f, f_dict in t_dict.items():
                     path = os.path.join(x, h, t, f)
                     makeDir(path)
