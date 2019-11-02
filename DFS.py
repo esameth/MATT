@@ -1,3 +1,10 @@
+'''
+Goes through the json file to retrieve file paths.
+These paths will be used to merge files from the child directories to the parent directory.
+Ex: 1/1/1/4, 1/1/1/5, 1/1/1/10 fasta files will be merged into 1/1/1
+Ex: 1/1/1, 1/1/2, 1/1/3 fasta files will be merged into 1/1
+'''
+
 import os
 import json
 
