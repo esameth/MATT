@@ -1,5 +1,6 @@
 '''
-Goes through the hierarchy of each protein and will create a directory of all proteins within the level
+Goes through the hierarchy of each protein and will create a directory of all proteins within the level.
+Each folder has a sequence folder and the bottom most child has a fasta file of all the proteins belonging to it
 '''
 
 import json
@@ -16,24 +17,12 @@ def makeDir(path):
     if not os.path.exists(path):
         os.makedirs(os.path.join(path, 'sequences'))
 
-def getID(f_dict, path):
-    path = os.path.join(path, "sequences")
-    u_idList = []
-    for protein in f_dict:
-        u_idList.append(protein['u_id'])
-
-    makeFasta(u_idList, path)
-
-def makeFasta(u_idList, path):
-    with open('../../Downloads/ecod.latest.fasta.txt', 'r') as infile, open(os.path.join(path, 'multifasta.txt'), 'w') as outfile:
-        currentLine = ""
-        for line in infile:
-            if line.startswith('>'):
-                for u_id in u_idList:
-                    if u_id in currentLine:
-                        outfile.write(currentLine)
-                currentLine = ""
-            currentLine += line
+# Uses the grep command to pull from the fasta file those that belong to the hierarchy
+# Pipes it to a multifasta file in the parent/sequences directory
+def makeFasta(path, f_id):
+    with open(os.path.join(path, 'sequences', 'multifasta.txt'), 'a+'):
+        cmd = "LC_ALL=C fgrep '|" + f_id + "|' -A 1 data/ecod.latest.fasta.txt | grep -v '^--' >> " + os.path.join(path, 'sequences', 'multifasta.txt')
+        os.system(cmd)
 
 # Go through the dictionary
 def parseDict(proteins):
@@ -46,7 +35,12 @@ def parseDict(proteins):
                 for f, f_dict in t_dict.items():
                     path = os.path.join(x, h, t, f)
                     makeDir(path)
-                    getID(f_dict, path)
+                    # Replace the path with . so we can look at the f_id (ex: 1/1/1/2 --> 1.1.1.2)
+                    f_id = path.replace('/', '.')
+                    # The dictionary had "None" as a placeholder for those without an f-level (ex: 1.1.3)
+                    if f_id.rsplit('.', 1)[1] == "None":
+                        f_id = f_id.rsplit('.', 1)[0]
+                    makeFasta(path, f_id)
 
 def main():
     proteins = openFile()
