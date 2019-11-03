@@ -7,6 +7,7 @@ Ex: 1/1/1, 1/1/2, 1/1/3 fasta files will be merged into 1/1
 
 import os
 import json
+import shutil
 
 # Open the json file
 def openFile():
@@ -20,10 +21,10 @@ def openFile():
 # parent: the parent path that the files will be merged into
 
 def merge(paths, parent):
-    for path in paths:
-        with open(path, 'r') as infile, open(parent, 'a+') as outfile:
-            for line in infile:
-                outfile.write(line)
+    with open(parent, 'wb') as outfile:
+        for file in paths:
+            with open(file, 'rb') as infile:
+                shutil.copyfileobj(infile, outfile)
 
 # Go through the dictionary and create lists of file paths to be merged
 # __path is the list of files to be merged
