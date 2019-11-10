@@ -1,0 +1,54 @@
+(5xbf:B, (5xbf:A, 1mix:A))
+Core Residues: 42
+Core RMSD: 2.193
+Raw Score: 37.384
+Reference structure: 5xbf:B
+
+1mix:A   MKFFYSDQ----------------------------------------------------     8  (A)
+5xbf:A   --------EEPPKEKLHTLEEFSYEFFRAPEKDMVSMAVLPLARARGHLWAYSCEPLRQP    52  (B)
+5xbf:B   ------------------------------------------------------------     1  (C)
+
+1mix:A   ------------------------------------------------------------     8  (A)
+5xbf:A   LLKRVHANVDLWDIACQIFVAILRYMGDYPSRQAWPTLELTDQIFTLALQHPALQDEVYC   112  (B)
+5xbf:B   ------------------------------------------------------------     1  (C)
+
+1mix:A   ------------------------------------------------------------     8  (A)
+5xbf:A   QILKQLTHNSNRHSEERGWQLLWLCTGLFPPSKGLLPHAQKFIDTRRGKLLAPDCSRRIQ   172  (B)
+5xbf:B   ------------------------------------------------------------     1  (C)
+
+1mix:A   ------------------------------------------------------------     8  (A)
+5xbf:A   KVLRTGPRKQPPHQVEVEAAEQNVSRICHKIYFPNDTSEMLEVVANTRVRDVCDSIATRL   232  (B)
+5xbf:B   ------------------------------------------------------------     1  (C)
+
+1mix:A   ------------------------------------------------------------     8  (A)
+5xbf:A   QLASWEGCSLFIKISDKVISQKEGDFFFDSLREVSDWVKKNKPQKEGAPVTLPYQVYFMR   292  (B)
+5xbf:B   ------------------------------------------------------------     1  (C)
+
+1mix:A   ------NVDSRD-PVQL-NLLYVQARD---------------------------------    27  (A)
+5xbf:A   KLWLNISPGKD-VN-ADTILHYHQELP---------------------------------   317  (B)
+5xbf:B   ---------------------------QDFRKYEEGFDPYSMFTPEQIMGKDVRLLRIKK    33  (C)
+
+1mix:A   --DILNGSHP-VSFDKACEFAGY-QCQIQFG------PH-NEQKHKPG--F-L--ELK--    69  (A)
+5xbf:A   --KYLRGF-HKCSREDAIHLAGL-IYKAQFN------N-DR--S----QLASVPKILR--   358  (B)
+5xbf:B   EGSLD------------------LA--LEGGVDSPIGK--------------------VV    53  (C)
+
+1mix:A   --DFL-----PKEYIK-QK---GERK----IFMAHKN-----CGNMSEIEAKVRYVKLAR   109  (A)
+5xbf:A   --ELV-----PENLTRLMSSEEWKKS----ILLAYDK-----HKDKTVEEAKVAFLKWIC   402  (B)
+5xbf:B   VSAV-YERGAAERHG-------G---IVKGDE--IMAINGKIVTDYTLAEAEAALQKAWN   100  (C)
+
+1mix:A   SLKTYGV---------------------S--------FFLVKEKMKGKNKLVPR----L-   135  (A)
+5xbf:A   RW-PTF-GSAFFEVKQTSEPSYPDVILIAINRHGVLLI-H--------------PKTKDL   445  (B)
+5xbf:B   QG----------------------------------------------------------   102  (C)
+
+1mix:A   LG-IT-KECVMRVDEKTKEVIQEWSLTNIK-----------------------RWAASPK   170  (A)
+5xbf:A   L-TT-YP-----------------------FTKISSWSSGSTYFHMALGSLGRGS-----   475  (B)
+5xbf:B   ------------------------------------------------------------   102  (C)
+
+1mix:A   SFTLDFGDYQDGYYSVQTTEG--EQIAQLIAGYIDIIL----------------------   206  (A)
+5xbf:A   ---------------------RLLC-------------ETSLGYKMDDLLTSYVQQLLSA   501  (B)
+5xbf:B   ------------------------------------------------------------   102  (C)
+
+1mix:A   --------------------------------------   206  (A)
+5xbf:A   MNKQRGSKAPALAST-----------------------   516  (B)
+5xbf:B   ---------------GDWIDLVVAVCPPKEYDDELTFF   125  (C)
+

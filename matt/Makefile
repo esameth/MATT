@@ -1,0 +1,11 @@
+CC = clang
+CFLAGS = -lm -O3 -g -Wall -Wextra
+
+matt : src/chain.c src/chain.h src/pdb.c src/pdb.h src/Protein.c src/Protein.h src/secondary.c src/secondary.h src/FileReader.c src/FileReader.h src/util.c src/util.h src/Vector.c src/Vector.h src/MultipleAlignment.c src/MultipleAlignment.h src/Score.c src/Score.h src/OctTree.c src/OctTree.h src/RMSD.c src/RMSD.h src/AssemblyOrder.c src/AssemblyOrder.h src/Extend.c src/Extend.h src/MultipleAlignmentOutput.h src/MultipleAlignmentOutput.c 
+# zlib/adler32.c zlib/compress.c zlib/crc32.c zlib/deflate.c zlib/gzio.c zlib/infback.c zlib/inffast.c zlib/inflate.c zlib/inftrees.c zlib/trees.c zlib/uncompr.c zlib/zutil.c
+	$(CC) $(CFLAGS) -o bin/matt src/Matt.c src/chain.c src/pdb.c src/Protein.c src/secondary.c src/FileReader.c src/util.c src/Vector.c src/MultipleAlignment.c src/Score.c src/OctTree.c src/RMSD.c src/AssemblyOrder.c src/Extend.c src/MultipleAlignmentOutput.c
+    
+    # zlib/adler32.c zlib/compress.c zlib/crc32.c zlib/deflate.c zlib/gzio.c zlib/infback.c zlib/inffast.c zlib/inflate.c zlib/inftrees.c zlib/trees.c zlib/uncompr.c zlib/zutil.c
+
+clean :
+	rm -f bin/matt src/*~ bin/core bin/core.*
