@@ -8,6 +8,7 @@ import json
 import os
 import tempfile
 
+# Path to pdb files
 path = "/data/pdb"
 
 # Open the json file
@@ -16,33 +17,31 @@ def openFile():
         loaded_json = json.load(f)
     return loaded_json
 
+# Parse through the dictionary and pull the pdb id
 def parse(proteins):
     for x, x_dict in proteins.items():
-        Hpath = []
+        XpdbList = []
         for h, h_dict in x_dict.items():
-            Tpath = []
-            Hpath.append(os.path.join(x, h,"sequences", "multifasta.txt"))
-            HpathP = os.path.join(x, "sequences", "multifasta.txt")
+            HpdbList = []
             for t, t_dict in h_dict.items():
-                pdbList = []
-                Tpath.append(os.path.join(x, h, t, "sequences", "multifasta.txt"))
-                TpathP = os.path.join(x, h, "sequences", "multifasta.txt")
+                TpdbList = []
                 for f, f_dict in t_dict.items():
+                    FpdbList = []
                     for protein in f_dict:
-                        pdbList.append(protein["pdb"])
-                print(pdbList)
-                makeFile(pdbList)
+                        FpdbList.append(protein["pdb"])
+                        TpdbList.append(protein["pdb"])
+                        HpdbList.append(protein["pdb"])
+                    makeTempFile(FpdbList)
+                makeTempFile(TpdbList)
+            makeTempFile(HpdbList)
+        makeTempFile(XpdbList)
 
-def makeFile(pdbList):
-    with open("./temp.txt", "w") as f:
+# Create a temporary file that will be passed into MATT
+def makeTempFile(pdbList):
+    with tempfile.TemporaryFile(mode = 'w+') as fp:
         for pdb in pdbList:
-            f.write(os.path.join(path, pdb[1:3], "pdb" + pdb + ".ent.gz") + "\n")
-
-'''def makeTempFile():
-    with tempfile.TemporaryFile() as fp:
-        fp.write(b"Hi")
-        print(tempfile.gettempprefix())'''
-
+            fp.write(os.path.join(path, pdb[1:3], "pdb" + pdb + ".ent.gz") + "\n")
+            print(os.path.join(path, pdb[1:3], "pdb" + pdb + ".ent.gz"))
 
 def main():
     proteins = openFile()
