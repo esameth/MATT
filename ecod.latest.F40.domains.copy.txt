@@ -1,0 +1,34 @@
+#/data/ecod/database_versions/v248/ecod.develop248.F40.domains.txt
+#ECOD version develop248
+#Domain list version 1.5
+#Grishin lab (http://prodata.swmed.edu/ecod)
+#uid	ecod_domain_id	manual_rep	f_id	pdb	chain	pdb_range	seqid_range	arch_name	x_name	h_name	t_name	f_name	asm_status	ligand
+000143792	e3s8iA1	MANUAL_REP	1.1.1.3	3s8i	A	A:241-367	A:22-148	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	Asp_protease	NOT_DOMAIN_ASSEMBLY	EDO,PO4,UNX
+000000000	e2nmzA1	MANUAL_REP	1.1.1.4	2nmz	A	A:1-99	A:1-99	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	RVP	NOT_DOMAIN_ASSEMBLY	ROC,SO4
+000000001	e1hvcA1	AUTO_NONREP	1.1.1.4	1hvc	A	A:1B-99A	A:1-203	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	RVP	NOT_DOMAIN_ASSEMBLY	A79
+000139793	e3linA1	AUTO_NONREP	1.1.1.4	3lin	A	A:1-116	A:1-116	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	RVP	NOT_DOMAIN_ASSEMBLY	E13
+000002764	e1ic8A2	MANUAL_REP	101.1.4.27	1ic8	A	A:87-180	A:3-96	alpha arrays	"HTH"	"HTH"	"tetra-helical, lambda repressor-like"	HNF-1_N_C	NOT_DOMAIN_ASSEMBLY	NO_LIGANDS_4A
+000000038	e2pnwA1	MANUAL_REP	1.1.2.1	2pnw	A	A:5-101,A:270-369	A:7-103,A:272-371	beta barrels	"cradle loop barrel"	"RIFT-related"	"double psi"	3D	NOT_DOMAIN_ASSEMBLY	SO4
+000000039	e2ae0X1	MANUAL_REP	1.1.2.1	2ae0	X	X:3-103,X:243-337	X:3-103,X:243-337	beta barrels	"cradle loop barrel"	"RIFT-related"	"double psi"	3D	NOT_DOMAIN_ASSEMBLY	EDO
+000000037	e1bw3A1	MANUAL_REP	1.1.2.3	1bw3	A	A:1-125	A:1-125	beta barrels	"cradle loop barrel"	"RIFT-related"	"double psi"	Barwin	NOT_DOMAIN_ASSEMBLY	NO_LIGANDS_4A
+000000029	e1qcsA1	MANUAL_REP	1.1.2.4	1qcs	A	A:0-85	A:4-89	beta barrels	"cradle loop barrel"	"RIFT-related"	"double psi"	CDC48_N	NOT_DOMAIN_ASSEMBLY	SO4
+000000030	e1cr5A1	MANUAL_REP	1.1.2.4	1cr5	A	A:26-107	A:5-86	beta barrels	"cradle loop barrel"	"RIFT-related"	"double psi"	CDC48_N	NOT_DOMAIN_ASSEMBLY
+000000272	e2gqfA1	MANUAL_REP	1.10.1.1	2gqf	A	A:195-260,A:328-342	A:195-260,A:328-342	beta barrels	"cradle loop barrel"	"NO_H_NAME"	"HI0933 barrel domain-like"	HI0933_like_1st	NOT_DOMAIN_ASSEMBLY	FAD
+000000273	e2i0zA1	MANUAL_REP	1.10.1.1	2i0z	A	A:193-273,A:345-361	A:217-297,A:369-385	beta barrels	"cradle loop barrel"	"NO_H_NAME"	"HI0933 barrel domain-like"	HI0933_like_1st	NOT_DOMAIN_ASSEMBLY	CL,FAD
+000138821	e2kvoA1	MANUAL_REP	1.11.1.1	2kvo	A	A:1-120	A:1-120	beta barrels	"cradle loop barrel"	"NO_H_NAME"	"Photosystem II accessory factor Psb28"	Psb28	NOT_DOMAIN_ASSEMBLY	NO_LIGANDS_4A
+001693518	e2gh8A2	MANUAL_REP	1.2.1.1	2gh8	A	A:360-419,A:590-703	A:208-267,A:438-551	beta barrels	"cradle loop barrel"	"NO_H_NAME"	"Capsid protein protrusion (P) domain"	Calici_coat	NOT_DOMAIN_ASSEMBLY	NO_LIGANDS_4A
+001696116	e3j1pA1	AUTO_NONREP	1.2.1.1	3j1p	A	A:229-291,A:447-569	A:229-291,A:447-569	beta barrels	"cradle loop barrel"	"NO_H_NAME"	"Capsid protein protrusion (P) domain"	Calici_coat	NOT_DOMAIN_ASSEMBLY	NO_LIGANDS_4A
+000170219	e2kctA1	AUTO_NONREP	2.1.1.5	2kct	A	A:43-130	A:2-86	beta barrels	"OB-fold"	"NO_H_NAME"	"Nucleic acid-binding proteins"	CcmE	NOT_DOMAIN_ASSEMBLY	NO_LIGANDS_4A
+000000324	e1c9oA1	MANUAL_REP	2.1.1.6	1c9o	A	A:1-66	A:1-66	beta barrels	"OB-fold"	"NO_H_NAME"	"Nucleic acid-binding proteins"	CSD	NOT_DOMAIN_ASSEMBLY	NA,TRS
+000000352	e1wfqA1	MANUAL_REP	2.1.1.6	1wfq	A	A:1-89	A:1-89	beta barrels	"OB-fold"	"NO_H_NAME"	"Nucleic acid-binding proteins"	CSD	NOT_DOMAIN_ASSEMBLY	NO_LIGANDS_4A
+000168736	e2k5nA1	AUTO_NONREP	2.1.1.6	2k5n	A	A:1-74	A:1-66	beta barrels	"OB-fold"	"NO_H_NAME"	"Nucleic acid-binding proteins"	CSD	NOT_DOMAIN_ASSEMBLY	
+000183540	e3tndB1	AUTO_NONREP	1.1.3	3tnd	B	B:1G-68	B:8-74	beta barrels	"cradle loop barrel"	"RIFT-related"	"AbrB"	F_UNCLASSIFIED	001097138	NA,SO4
+000144547	e2l66A1	AUTO_NONREP	1.1.3	2l66	A	A:2-54	A:1-53	beta barrels	"cradle loop barrel"	"RIFT-related"	"AbrB"	F_UNCLASSIFIED	001097144	NO_LIGANDS_4A
+001104928	e1ub4C1	AUTO_NONREP	1.1.3.1	1ub4	C	C:402-476	C:5-79	beta barrels	"cradle loop barrel"	"RIFT-related"	"AbrB"	MazE_antitoxin	NOT_DOMAIN_ASSEMBLY	
+000020647	e1avf.1	AUTO_NONREP	1.1.1.43	1avf	.	Q:1-22,J:2-329	Q:1-22,J:2-329	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	Asp_C,Asp_N	NOT_DOMAIN_ASSEMBLY	NO_LIGANDS_4A
+000020669	e1lyw.1	AUTO_NONREP	1.1.1.43	1lyw	.	A:3-97,B:106-346	A:3-97,B:1-241	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	Asp_C,Asp_N	NOT_DOMAIN_ASSEMBLY	EPE
+000020670	e1lya.1	AUTO_NONREP	1.1.1.43	1lya	.	C:1-97,D:106-346	C:1-97,D:1-241	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	Asp_C,Asp_N	NOT_DOMAIN_ASSEMBLY	NAG
+000020674	e1lyb.1	AUTO_NONREP	1.1.1.43	1lyb	.	C:1-97,D:106-346	C:1-97,D:1-241	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	Asp_C,Asp_N	NOT_DOMAIN_ASSEMBLY	NAG
+000020675	e1lyw.2	AUTO_NONREP	1.1.1.43	1lyw	.	G:3-97,H:106-346	G:3-97,H:1-241	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	Asp_C,Asp_N	NOT_DOMAIN_ASSEMBLY	EPE
+000020678	e1lyb.2	AUTO_NONREP	1.1.1.43	1lyb	.	A:1-97,B:106-346	A:1-97,B:1-241	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	Asp_C,Asp_N	NOT_DOMAIN_ASSEMBLY	NAG
+000020679	e1lya.2	AUTO_NONREP	1.1.1.43	1lya	.	A:1-97,B:106-346	A:1-97,B:1-241	beta barrels	"cradle loop barrel"	"RIFT-related"	"acid protease"	Asp_C,Asp_N	NOT_DOMAIN_ASSEMBLY	NAG
