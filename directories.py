@@ -16,6 +16,7 @@ def openFile():
 def makeDir(path):
     if not os.path.exists(path):
         os.makedirs(os.path.join(path, 'sequences'))
+        os.makedirs(os.path.join(path, 'alignments'))
 
 # Uses the grep command to pull from the fasta file those that belong to the hierarchy
 # Pipes it to a multifasta file in the parent/sequences directory
