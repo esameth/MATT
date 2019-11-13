@@ -8,10 +8,9 @@ import json
 import os
 import tempfile
 
-
 # Path to pdb files
 path = "/data/pdb"
-home = "/data/esameth/MATT/MATT/"
+home = "/data/esameth/MATT/"
 
 # Open the json file
 def openFile():
@@ -57,9 +56,10 @@ def makeTempFile(pdbList, fpath):
     # Create a temporary file that will hold the file paths to the pdb and their chains
     with tempfile.NamedTemporaryFile(mode = "w+t") as temp:
         for pdb, chain in pdbList:
-            temp.writelines(os.path.join(path, pdb[1:3], "pdb" + pdb + ".ent.gz") + ":" + chain)
+            temp.writelines(os.path.join(path, pdb[1:3], "pdb" + pdb + ".ent.gz") + ":" + chain + "\n")
         # Run MATT with the output names as 'alignment' and the list file as temp file name
         print("Writing to ", os.getcwd())
+        temp.seek(0)
         cmd = "matt -o alignment -L " + temp.name
         os.system(cmd)
     # Change back to the home directory
