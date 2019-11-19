@@ -5,6 +5,7 @@ Each folder has a sequence folder and the bottom most child has a fasta file of 
 
 import json
 import os
+import tempfile
 
 # Open the json file
 def openFile():
@@ -19,11 +20,52 @@ def makeDir(path):
         os.makedirs(os.path.join(path, 'alignments'))
 
 # Uses the grep command to pull from the fasta file those that belong to the hierarchy
-# Pipes it to a multifasta file in the parent/sequences directory
-def makeFasta(path, f_id):
-    with open(os.path.join(path, 'sequences', 'multifasta.txt'), 'a+'):
-        cmd = "LC_ALL=C fgrep '|" + f_id + "|' -A 1 data/ecod.latest.fasta.txt | grep -v '^--' >> " + os.path.join(path, 'sequences', 'multifasta.txt')
+# Pipes it to a temporary file
+def makeFasta(path, f_id, proteins):
+    # Will hold the protein sequences as the key and its header line as the value
+    # Used to remove duplicate sequences
+    tempdict = {}
+    removed = []
+
+    # Create a temporary file for the grep output
+    with tempfile.NamedTemporaryFile(mode="w+t") as temp:
+        cmd = "LC_ALL=C fgrep '|" + f_id + "|' -A 1 data/ecod.latest.F40.fasta.txt | grep -v '^--' >> " + temp.name
         os.system(cmd)
+        temp.seek(0)
+
+        # Look at the current and previous line
+        current = temp.readline()
+        for line in temp:
+            previous = current
+            current = line
+            # If it's the sequence, then add it as a key to the dictionary and the previous line as a value
+            if not current.startswith(">") and current not in tempdict:
+                tempdict[current] = previous
+            elif not current.startswith(">") and current in tempdict:
+                removed.append((previous.split('|')[0])[1:])
+
+    # Write the dictionary values to a fasta file
+    with open(os.path.join(path, 'sequences', 'sequences.fasta'), 'w+') as f:
+        for key, value in tempdict.items():
+            line = value + key
+            f.write(line)
+
+    # Split the id so we can parse through the proteins dictionary
+    x_level, h_level, t_level = f_id.split(".")[0], f_id.split(".")[1], f_id.split(".")[2]
+    f_level = f_id.split(".")[3] if len(f_id.split(".")) == 4 else "None"
+
+    hierarchy = proteins[x_level][h_level][t_level][f_level]
+
+    # Remove the duplicate proteins in the json file
+    for id in removed:
+        for i in range(len(hierarchy)):
+            if hierarchy[i]["u_id"] == id:
+                del hierarchy[i]
+                break
+
+    # Output the updated file with pretty JSON
+    with open("proteins.json", "w") as f:
+        json.dump(proteins, f, ensure_ascii=False, indent=4)
 
 # Go through the dictionary
 def parseDict(proteins):
@@ -41,7 +83,7 @@ def parseDict(proteins):
                     # The dictionary had "None" as a placeholder for those without an f-level (ex: 1.1.3)
                     if f_id.rsplit('.', 1)[1] == "None":
                         f_id = f_id.rsplit('.', 1)[0]
-                    makeFasta(path, f_id)
+                    makeFasta(path, f_id, proteins)
 
 def main():
     proteins = openFile()
