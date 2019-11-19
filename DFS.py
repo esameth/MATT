@@ -19,7 +19,6 @@ def openFile():
 # Merges the fasta files of the subdirectory into the parent directory
 # paths: list of file paths to be merged
 # parent: the parent path that the files will be merged into
-
 def merge(paths, parent):
     with open(parent, 'wb') as outfile:
         for file in paths:
@@ -34,19 +33,18 @@ def parseDict(proteins):
         Hpath = []
         for h, h_dict in x_dict.items():
             Tpath = []
-            Hpath.append(os.path.join(x, h,"sequences", "multifasta.txt"))
-            HpathP = os.path.join(x, "sequences", "multifasta.txt")
+            Hpath.append(os.path.join(x, h,"sequences", "sequences.fasta"))
+            HpathP = os.path.join(x, "sequences", "sequences.fasta")
             for t, t_dict in h_dict.items():
                 Fpath = []
-                Tpath.append(os.path.join(x, h, t, "sequences", "multifasta.txt"))
-                TpathP = os.path.join(x, h, "sequences", "multifasta.txt")
+                Tpath.append(os.path.join(x, h, t, "sequences", "sequences.fasta"))
+                TpathP = os.path.join(x, h, "sequences", "sequences.fasta")
                 for f, f_dict in t_dict.items():
-                    Fpath.append(os.path.join(x, h, t, f, "sequences", "multifasta.txt"))
-                    FpathP = os.path.join(x, h, t, "sequences", "multifasta.txt")
+                    Fpath.append(os.path.join(x, h, t, f, "sequences", "sequences.fasta"))
+                    FpathP = os.path.join(x, h, t, "sequences", "sequences.fasta")
                 merge(Fpath, FpathP)
             merge(Tpath, TpathP)
         merge(Hpath, HpathP)
-
 
 def main():
     proteins = openFile()
