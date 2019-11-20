@@ -60,7 +60,7 @@ def makeTempFile(pdbList, fpath):
         # Run MATT with the output names as 'alignment' and the list file as temp file name
         print("Writing to ", os.getcwd())
         temp.seek(0)
-        cmd = "matt -o alignment -t 28 -L " + temp.name
+        cmd = "/usr/local/bin/matt -o alignment -t 28 -L " + temp.name
         os.system(cmd)
     # Change back to the home directory
     os.chdir(home)
