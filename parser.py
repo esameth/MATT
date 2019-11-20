@@ -17,7 +17,7 @@ class Protein:
 def data():
     proteins = {}
 
-    with open('../../Downloads/ecod.latest.F40.domains.copy.txt') as f:
+    with open('data/ecod.latest.domains.txt') as f:
         # Skip the first 5 lines because they are headers
         for line in islice(f, 5, None):
             line = (line.replace('"', '')).split("\t")
