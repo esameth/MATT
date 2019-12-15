@@ -10,7 +10,7 @@ import tempfile
 
 # Path to pdb files
 path = "/data/pdb"
-home = "/data/esameth/MATT/"
+home = "/Users/elysha//PycharmProjects/MATT/"
 
 # Open the json file
 def openFile():
@@ -53,15 +53,20 @@ def makeTempFile(pdbList, fpath):
     pathway = home + fpath
     # Change to the directory that will hold the alignments
     os.chdir(pathway)
-    # Create a temporary file that will hold the file paths to the pdb and their chains
-    with tempfile.NamedTemporaryFile(mode = "w+t") as temp:
-        for pdb, chain in pdbList:
-            temp.writelines(os.path.join(path, pdb[1:3], "pdb" + pdb + ".ent.gz") + ":" + chain + "\n")
-        # Run MATT with the output names as 'alignment' and the list file as temp file name
-        print("Writing to ", os.getcwd())
-        temp.seek(0)
-        cmd = "/usr/local/bin/matt -o alignment -t 28 -L " + temp.name
-        os.system(cmd)
+    # Used so we can see the folder we are writing to
+    fpath = fpath.replace("/", "_")
+
+    # If alignment folder is empty, run the alignment
+    if len(os.listdir(pathway)) == 0:
+        # Create a tem file that will hold the pdb paths
+        with tempfile.NamedTemporaryFile(mode = "w+t", prefix = fpath) as temp:
+            for pdb, chain in pdbList:
+                temp.write(os.path.join(fpath, pdb[1:3], "pdb" + pdb + ".ent.gz") + ":" + chain + "\n")
+            # Run MATT with the output names as 'alignment' and the list file as temp file name
+            temp.seek(0)
+            cmd = "timeout -k 2h /usr/local/bin/matt -o alignment -t 28 -L " + temp.name
+            os.system(cmd)
+
     # Change back to the home directory
     os.chdir(home)
 
