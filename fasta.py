@@ -16,8 +16,8 @@ def openFile():
 def remove():
     # Will hold the protein sequences as the key and its header line as the value
     tempdict = {}
-    # Used to remove duplicate sequences and those that differ by max two letters
-    removed = []
+    # Used to remove sequences
+    removed = {}
 
     with open("data/ecod.latest.fasta.txt", "r") as f:
         # Look at the current and previous line
@@ -28,31 +28,40 @@ def remove():
 
             # Remove the entry if the sequence is in the dictionary already
             if not current.startswith(">") and current != "\n" and current in tempdict:
-                removed.append((((previous.split('|')[0])[1:]), (previous.split('|')[2])))
+                # Add it to the removed dictionary 
+                if current not in removed:
+                    removed[current] = []
+                removed[current].append((((previous.split('|')[0])[1:]), (previous.split('|')[2])))
 
             # If it's the sequence, then add it as a key to the dictionary and the previous line as a value
             elif not current.startswith(">") and current != "\n" and current not in tempdict:
                 # Used as boolean for if they are different enough to add to the dictionary
                 OK = True
 
-                # Check every key in the dictionary to see the number of differences
-                for seq in tempdict.keys():
-                    # If they are similar, then we will not add it to dictionary (90% sequence identity)
-                    if identity(current, seq) >= 0.9:
-                        OK = False
-                        break
+                if current in removed:
+                    OK = False
+
+                else:
+                    # Check every key in the dictionary to see the number of differences
+                    for seq in tempdict.keys():
+                        # If they are similar, then we will not add it to dictionary (90% sequence identity)
+                        if identity(current, seq) >= 0.9:
+                            OK = False
+                            break
 
                 # Enough differences so add it to the dictionary
                 if OK == True:
                     tempdict[current] = previous
 
-                # Not enough differences so we will remove it from the file
+                # Not enough differences or already in removed dictionary so we will remove it from the file
                 else:
-                    removed.append((((previous.split('|')[0])[1:]), (previous.split('|')[2])))
+                    if current not in removed:
+                        removed[current] = []
+                    removed[current].append((((previous.split('|')[0])[1:]), (previous.split('|')[2])))
 
     return tempdict, removed
 
-# Rewrites the fasta file so that there are no duplicates or similar sequences 
+# Rewrites the fasta file so that there are no duplicates or similar sequences (< 3 differences)
 def removeFasta(tempdict):
     # Write the dictionary values to a fasta file
     with open("data/ecod.latest.fasta.txt", 'w') as f:
@@ -60,26 +69,27 @@ def removeFasta(tempdict):
              line = value + key
              f.write(line)
 
-# Rewrites the json file so that there are no duplicates or similar sequences 
+# Rewrites the json file so that there are no duplicates or similar sequences (< 3 differences)
 def removeDict(proteins, removed):
-    for value in removed:
-        # Split the id so we can parse through the proteins dictionary
-        x, h, t = value[1].split(".")[0], value[1].split(".")[1], value[1].split(".")[2]
-        f = value[1].split(".")[3] if len(value[1].split(".")) == 4 else "None"
-        hierarchy = proteins[x][h][t][f]
+    for protein in removed.values():
+        for value in protein:
+            # Split the id so we can parse through the proteins dictionary
+            x, h, t = value[1].split(".")[0], value[1].split(".")[1], value[1].split(".")[2]
+            f = value[1].split(".")[3] if len(value[1].split(".")) == 4 else "None"
+            hierarchy = proteins[x][h][t][f]
 
-        # Remove proteins in the json file
-        id = value[0]
-        for i in range(len(hierarchy)):
-            if hierarchy[i]["u_id"] == id:
-                del hierarchy[i]
-                break
+            # Remove the duplicate proteins in the json file
+            id = value[0]
+            for i in range(len(hierarchy)):
+                if hierarchy[i]["u_id"] == id:
+                    del hierarchy[i]
+                    break
 
     # Output the updated file
     with open("proteins.json", "w") as f:
         json.dump(proteins, f, ensure_ascii=False, indent=4)
 
-# Calculates the number of differences between two strings (the distance) based on percentage of sequence length
+# Calculates the number of differences between two strings (the distance)
 def identity(s1,s2):
     if len(s1) > len(s2):
         s1,s2 = s2,s1
@@ -101,6 +111,6 @@ def main():
     tempdict, removed = remove()
     removeFasta(tempdict)
     removeDict(proteins, removed)
-
+   
 if __name__ == "__main__":
     main()
