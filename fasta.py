@@ -42,13 +42,15 @@ def remove():
                     OK = False
 
                 else:
-                    # Check every key in the dictionary to see the number of differences
-                    for seq in tempdict.keys():
+                    # Get the protein hierarchy level
+                    level = "|" + previous.split("|")[2] + "|"
+                    # Check the keys in the dictionary of the same level to see the number of differences
+                    for seq, ID in tempdict.items():
                         # If they are similar, then we will not add it to dictionary (90% sequence identity)
-                        if identity(current, seq) >= 0.9:
+                        if level in ID and identity(current, seq) >= 0.9:
+                            print(seq, current)
                             OK = False
                             break
-
                 # Enough differences so add it to the dictionary
                 if OK == True:
                     tempdict[current] = previous
