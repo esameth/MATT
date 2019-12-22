@@ -64,7 +64,7 @@ def makeTempFile(pdbList, fpath):
                 temp.write(os.path.join(fpath, pdb[1:3], "pdb" + pdb + ".ent.gz") + ":" + chain + "\n")
             # Run MATT with the output names as 'alignment' and the list file as temp file name
             temp.seek(0)
-            cmd = "timeout -k 2h /usr/local/bin/matt -o alignment -t 28 -L " + temp.name
+            cmd = "timeout --kill-after=2h 2h /usr/local/bin/matt -o alignment -t 28 -L " + temp.name
             os.system(cmd)
 
     # Change back to the home directory
