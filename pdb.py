@@ -50,10 +50,10 @@ def parse(proteins):
 
 # Create a temporary file that will be passed into MATT
 def makeTempFile(pdbList, fpath):
-    # Get file path to the alignment folder
     pathway = home + fpath
-
-    # Used so we can see the folder we are writing to when calling htop
+    # Change to the directory that will hold the alignments
+    os.chdir(pathway)
+    # Used so we can see the folder we are writing to
     fpath = fpath.replace("/", "_")
 
     # If alignment folder is empty, run the alignment
@@ -64,23 +64,21 @@ def makeTempFile(pdbList, fpath):
                 temp.write(os.path.join(fpath, pdb[1:3], "pdb" + pdb + ".ent.gz") + ":" + chain + "\n")
             # Run MATT with the output names as 'alignment' and the list file as temp file name
             temp.seek(0)
-            
-            # Subprocess command
-            cmd = ["/usr/local/bin/matt", "-o", "alignment", "-t", "8", "-L", temp.name]
-            # Run the subprocess and output it to the correct folder
-            proc = subprocess.Popen(cmd, cmd=pathway)
-            # Timeout and kill subprocess after 1 hour
+            cmd = ["/usr/local/bin/matt", "-o", "alignment", "-t", "28", "-L", temp.name]
+            proc = subprocess.Popen(cmd)
             try:
                 print(proc.communicate(timeout=7200))
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.communicate()
 
-            # If process was killed, output it to a file
             if proc.returncode != 0:
                 print("Failed to align " + fpath)
                 with open("/data/esameth/MATT/timedout.txt", "a+") as f:
                     f.write(fpath + "\n")
+    
+    # Change back to the home directory
+    os.chdir(home)
 
 def main():
     proteins = openFile()
