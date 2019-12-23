@@ -66,12 +66,14 @@ def makeTempFile(pdbList, fpath):
             temp.seek(0)
             cmd = ["/usr/local/bin/matt", "-o", "alignment", "-t", "28", "-L", temp.name]
             proc = subprocess.Popen(cmd)
+            # Timeout after an hour - print in realtime
             try:
-                print(proc.communicate(timeout=7200))
+                print(proc.communicate(timeout=3600))
+            # If timed out, kill the subprocess
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.communicate()
-
+            # If killed, output folder name to a file to later run
             if proc.returncode != 0:
                 print("Failed to align " + fpath)
                 with open("/data/esameth/MATT/timedout.txt", "a+") as f:
