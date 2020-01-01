@@ -5,6 +5,7 @@ Sequence similarity is based on Levenshtein Edit Distance between strings
 '''
 
 import json
+from Bio import SeqIO
 
 # Open the json file
 def openFile():
@@ -19,57 +20,50 @@ def remove():
     # Used to remove sequences
     removed = {}
 
-    with open("data/ecod.latest.fasta.txt", "r") as f:
-        # Look at the current and previous line
-        current = f.readline()
-        for line in f:
-            previous = current
-            current = line
-
+    with open("data/ecod.latest.fasta.txt", "rt") as f:
+        for reads in SeqIO.parse(f, 'fasta'):
+            sequence = str(reads.seq)
+            ID = str(reads.id)
             # Remove the entry if the sequence is in the dictionary already
-            if not current.startswith(">") and current != "\n" and current in tempdict:
-                # Add it to the removed dictionary 
-                if current not in removed:
-                    removed[current] = []
-                removed[current].append((((previous.split('|')[0])[1:]), (previous.split('|')[2])))
+            if sequence in tempdict:
+                if sequence not in removed:
+                    removed[sequence] = []
+                removed[sequence].append((((ID.split('|')[0])[1:]), (ID.split('|')[2])))
 
-            # If it's the sequence, then add it as a key to the dictionary and the previous line as a value
-            elif not current.startswith(">") and current != "\n" and current not in tempdict:
+            # Add sequence as a key to the dictionary and the ID as a value
+            elif sequence not in tempdict:
                 # Used as boolean for if they are different enough to add to the dictionary
                 OK = True
 
-                if current in removed:
+                if sequence in removed:
                     OK = False
 
                 else:
                     # Get the protein hierarchy level
-                    level = "|" + previous.split("|")[2] + "|"
+                    level = "|" + ID.split("|")[2] + "|"
                     # Check the keys in the dictionary of the same level to see the number of differences
-                    for seq, ID in tempdict.items():
+                    for seq, id in tempdict.items():
                         # If they are similar, then we will not add it to dictionary (90% sequence identity)
-                        if level in ID and identity(current, seq) >= 0.9:
-                            print(seq, current)
+                        if level in id and identity(sequence, seq) >= 0.9:
                             OK = False
                             break
+
                 # Enough differences so add it to the dictionary
                 if OK == True:
-                    tempdict[current] = previous
+                    tempdict[reads.seq] = reads.id
 
-                # Not enough differences or already in removed dictionary so we will remove it from the file
+                # Not enough differences so we will remove it from the file
                 else:
-                    if current not in removed:
-                        removed[current] = []
-                    removed[current].append((((previous.split('|')[0])[1:]), (previous.split('|')[2])))
-
+                    if sequence not in removed:
+                        removed[sequence] = []
+                    removed[sequence].append((((ID.split('|')[0])[1:]), (ID.split('|')[2])))
     return tempdict, removed
 
 # Rewrites the fasta file so that there are no duplicates or similar sequences (< 3 differences)
 def removeFasta(tempdict):
     # Write the dictionary values to a fasta file
     with open("data/ecod.latest.fasta.txt", 'w') as f:
-         for key, value in tempdict.items():
-             line = value + key
-             f.write(line)
+         SeqIO.write(tempdict.values(), f, 'fasta')
 
 # Rewrites the json file so that there are no duplicates or similar sequences (< 3 differences)
 def removeDict(proteins, removed):
