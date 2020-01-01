@@ -24,39 +24,32 @@ def remove():
         for reads in SeqIO.parse(f, 'fasta'):
             sequence = str(reads.seq)
             ID = str(reads.id)
-            # Remove the entry if the sequence is in the dictionary already
-            if sequence in tempdict:
-                if sequence not in removed:
-                    removed[sequence] = []
-                removed[sequence].append((((ID.split('|')[0])[1:]), (ID.split('|')[2])))
 
             # Add sequence as a key to the dictionary and the ID as a value
-            elif sequence not in tempdict:
+            if sequence not in tempdict:
                 # Used as boolean for if they are different enough to add to the dictionary
                 OK = True
 
-                if sequence in removed:
-                    OK = False
-
-                else:
-                    # Get the protein hierarchy level
-                    level = "|" + ID.split("|")[2] + "|"
-                    # Check the keys in the dictionary of the same level to see the number of differences
-                    for seq, id in tempdict.items():
-                        # If they are similar, then we will not add it to dictionary (90% sequence identity)
-                        if level in id and identity(sequence, seq) >= 0.9:
-                            OK = False
-                            break
+                # Get the protein hierarchy level
+                level = "|" + ID.split("|")[2] + "|"
+                # Check the keys in the dictionary of the same level to see the number of differences
+                for seq, id in tempdict.items():
+                    # If they are similar, then we will not add it to dictionary (90% sequence identity)
+                    if level in id and identity(sequence, seq) >= 0.9:
+                        OK = False
+                        break
 
                 # Enough differences so add it to the dictionary
                 if OK == True:
                     tempdict[reads.seq] = reads.id
 
+            # Remove the entry if the sequence is in the dictionary already or not enough differences
+            elif sequence in tempdict or OK == False:
                 # Not enough differences so we will remove it from the file
-                else:
-                    if sequence not in removed:
-                        removed[sequence] = []
-                    removed[sequence].append((((ID.split('|')[0])[1:]), (ID.split('|')[2])))
+                if sequence not in removed:
+                    removed[sequence] = []
+                removed[sequence].append((((ID.split('|')[0])[1:]), (ID.split('|')[2])))
+                
     return tempdict, removed
 
 # Rewrites the fasta file so that there are no duplicates or similar sequences (< 3 differences)
