@@ -25,9 +25,8 @@ def remove(fasta):
     levelDict = {}
     removed = set()
 
-    readsDict = SeqIO.index(fasta, "fasta")
-    for ID, sequence in readsDict.items():
-        seq, level = str(sequence.seq), ID.split("|")[2]
+    for reads in SeqIO.parse(fasta, "fasta"):
+        seq, level = str(reads.seq), str(reads.id).split("|")[2]
         if level not in levelDict:
             levelDict[level] = []
 
@@ -36,11 +35,10 @@ def remove(fasta):
             # Add it to the list of removed if there's more than 90% sequence identity
             if not calcDist(seq, levelDict[level]):
                 removed.add(seq)
-            # Enough similarities so add it to our dict
+            # Enough similarities so add it to our dict and fasta file
             else:
                 levelDict[level].append(seq)
-                records.append(SeqRecord(Seq(seq, IUPAC.protein), id=ID, name=ID, description=ID))
-
+                records.append(SeqRecord(Seq(seq, IUPAC.protein), id=reads.id))
     # Rewrites the fasta file so that there are no duplicates or similar sequences (< 3 differences)
     with open(fasta, 'w') as output:
         SeqIO.write(records, output, 'fasta')
