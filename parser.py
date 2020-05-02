@@ -1,66 +1,90 @@
 '''
-Parse through the ECOD F40 Representative Domain text file and return a json file that includes
-each protein's pdb ID, chain, and hierarchy
+Parse through the fasta file and returns a json file that includes each protein's pdb ID, chain, and hierarchy
+Creates a directory of the hierarchy with the fasta file of all proteins in that level
 '''
 
 import json
 import re
-from itertools import islice
+import sys
+import os
 
-# Each protein has a pdb id and a chain
+fastaFile = sys.argv[1]
+
+import fasta
+records = fasta.remove()
+proteins = {}
+
+# Each protein has a pdb, id and a chain
 class Protein:
-    def __init__(self, u_id, pdb, chain):
-        self.u_id = u_id
+    def __init__(self, pdb, chain):
         self.pdb = pdb
         self.chain = chain
 
+def addToDict(x, h, t, f, protein):
+    # Create X-level (is not dependent on other levels)
+    if x not in proteins:
+        proteins[x] = {}
+
+    # Create H level which is dependent on X level
+    if h not in proteins[x]:
+        proteins[x][h] = {}
+
+    # Create T level which is dependent on X level and H level
+    if t not in proteins[x][h]:
+        proteins[x][h][t] = {}
+
+    # Create F level which is dependent on X level, H level, and T level
+    if f not in proteins[x][h][t]:
+        proteins[x][h][t][f] = []
+
+    # Add each protein's information to the dict
+    proteins[x][h][t][f].append(protein)
+
+# Create the directories
+def makeDir(dir):
+    # Holds the folder path
+    path = ""
+    # Holds the ID to grep for the fasta file
+    f_id = "|"
+
+    # Go through every single level and create a directory for it
+    for level in dir:
+        path = os.path.join(path, level)
+        f_id += level
+        f_id += "." if f_id.count(".") != 3 else "|"
+
+        if not os.path.exists(path):
+            os.makedirs(os.path.join(path, 'sequences'))
+            os.makedirs(os.path.join(path, 'alignments'))
+            # Uses the grep command to pull from the fasta file those that belong to the hierarchy
+            # Pipes it to a multifasta file in the sequences directory
+            cmd = "LC_ALL=C fgrep '" + f_id + "' -A 1 " + fastaFile + " | grep -v '^--' >> " + os.path.join(path, 'sequences', 'multifasta.fasta')
+            os.system(cmd)
+            
+# Get information needed for json file and creation of directories
 def data():
-    proteins = {}
+    for record in records:
+        record = str(record.id).split('|')
+        # Get the values in specific columns
+        pdb, f_id, chain = record[1][1:5], record[2].split("."), re.split(':|,', record[3])
 
-    with open('data/domains_test.txt') as f:
-        # Skip the first 5 lines because they are headers
-        for line in islice(f, 5, None):
-            line = line.split("\t")
-            # Get the values in specific columns
-            u_id, f_id, pdb, chain = line[0], line[3], line[4], line[5]
+        # Split chain if more than one and get only chain names
+        chain = ','.join([chain[i] for i in range(len(chain)) if i % 2 == 0])
 
-            # Some proteins have multiple chains designated as a "." that must be read from the pdb range column
-            if chain == '.':
-                chain = line[6]
-                chain = re.split(':|,', chain)
-                chain = ','.join([chain[i] for i in range(len(chain)) if i%2 == 0])
+        # Get the levels
+        x, h, t = f_id[0], f_id[1], f_id[2]
+        # Some f_id do not have a F group
+        f = f_id[3] if len(f_id) == 4 else "None"
 
-            split_f_id = f_id.split(".")
-            x_level, h_level, t_level = split_f_id[0], split_f_id[1], split_f_id[2]
+        # Add values to dictionary for json file
+        protein = Protein(pdb, chain).__dict__
+        addToDict(x, h, t, f, protein)
 
-            # Some f_id do not have a F group
-            f_level = split_f_id[3] if len(split_f_id) == 4 else "None"
+        # Make directory folder for it and make the fasta file
+        makeDir([x, h, t, f])
 
-            # Create X-level (is not dependent on other levels)
-            if x_level not in proteins:
-                proteins[x_level] = {}
-
-            # Create H level which is dependent on X level
-            if h_level not in proteins[x_level]:
-                proteins[x_level][h_level] = {}
-
-            # Create T level which is dependent on X level and H level
-            if t_level not in proteins[x_level][h_level]:
-                proteins[x_level][h_level][t_level] = {}
-
-            # Create F level which is dependent on X level, H level, and T level
-            if f_level not in proteins[x_level][h_level][t_level]:
-                proteins[x_level][h_level][t_level][f_level] = []
-
-            # Add each protein's information to the dict
-            proteins[x_level][h_level][t_level][f_level].append(Protein(u_id, pdb, chain).__dict__)
-
-    return proteins
-
-
-def main():
-    proteins = data()
-
+if __name__ == "__main__":
+    data()
     # Creates the json file for easy opening of the data
     with open('proteins.json', 'w+', encoding='utf-8') as f:
         json.dump(proteins, f, ensure_ascii=False, indent=4)
