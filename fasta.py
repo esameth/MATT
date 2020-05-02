@@ -4,14 +4,11 @@ Duplicates are based on protein sequence to reduce redundancy during alignment
 Sequence similarity is based on Levenshtein Edit Distance between strings
 '''
 
-import sys
 import Levenshtein
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import IUPAC
-
-fasta = sys.argv[1]
 
 # Gets Levenshtein distance of the sequence and all values in the same level
 # Returns False if >= 90% sequence similarity
@@ -22,7 +19,7 @@ def calcDist(seq, dict):
     return True
 
 # Removes duplicates in the fasta file
-def remove():
+def remove(fasta):
     # Holds records that will be added to fasta file
     records = []
     levelDict = {}
