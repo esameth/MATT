@@ -11,7 +11,7 @@ import os
 fastaFile = sys.argv[1]
 
 import fasta
-records = fasta.remove()
+records = fasta.remove(fastaFile)
 proteins = {}
 
 # Each protein has a pdb, id and a chain
@@ -60,7 +60,7 @@ def makeDir(dir):
             # Pipes it to a multifasta file in the sequences directory
             cmd = "LC_ALL=C fgrep '" + f_id + "' -A 1 " + fastaFile + " | grep -v '^--' >> " + os.path.join(path, 'sequences', 'multifasta.fasta')
             os.system(cmd)
-            
+
 # Get information needed for json file and creation of directories
 def data():
     for record in records:
