@@ -7,10 +7,11 @@ The temp file is deleted when done
 import json
 import os
 import tempfile
+import subprocess
 
 # Path to pdb files
-path = "/data/pdb"
-home = "/Users/elysha//PycharmProjects/MATT/"
+pdbPath = "/data/pdb"
+home = os.getcwd()
 
 # Open the json file
 def openFile():
@@ -35,7 +36,6 @@ def parse(proteins):
                     FpdbList = []
                     Fpath = os.path.join(x, h, t, f, "alignments")
                     for protein in f_dict:
-
                         # Add the pdb ids to each list
                         FpdbList.append((protein["pdb"], protein["chain"]))
                         TpdbList.append((protein["pdb"], protein["chain"]))
@@ -49,19 +49,19 @@ def parse(proteins):
         makeTempFile(XpdbList, Xpath)
 
 # Create a temporary file that will be passed into MATT
-def makeTempFile(pdbList, fpath):
-    pathway = home + fpath
-    # Change to the directory that will hold the alignments
-    os.chdir(pathway)
+def makeTempFile(pdbList, pathway):
     # Used so we can see the folder we are writing to
-    fpath = fpath.replace("/", "_")
+    fpath = pathway.replace("/", "_")
+    # Change to the directory that will hold the alignments
+    pathway = os.path.join(home, pathway)
+    os.chdir(pathway)
 
     # If alignment folder is empty, run the alignment
     if len(os.listdir(pathway)) == 0:
         # Create a tem file that will hold the pdb paths
         with tempfile.NamedTemporaryFile(mode = "w+t", prefix = fpath) as temp:
             for pdb, chain in pdbList:
-                temp.write(os.path.join(fpath, pdb[1:3], "pdb" + pdb + ".ent.gz") + ":" + chain + "\n")
+                temp.write(os.path.join(pdbPath, pdb[1:3], "pdb" + pdb + ".ent.gz") + ":" + chain + "\n")
             # Run MATT with the output names as 'alignment' and the list file as temp file name
             temp.seek(0)
             cmd = ["/usr/local/bin/matt", "-o", "alignment", "-t", "28", "-L", temp.name]
@@ -75,16 +75,12 @@ def makeTempFile(pdbList, fpath):
                 proc.communicate()
             # If killed, output folder name to a file to later run
             if proc.returncode != 0:
-                print("Failed to align " + fpath)
-                with open("/data/esameth/MATT/timedout.txt", "a+") as f:
+                with open(os.path.join(home, "timedout.txt"), "a+") as f:
                     f.write(fpath + "\n")
-    
+
     # Change back to the home directory
     os.chdir(home)
 
-def main():
+if __name__ == "__main__":
     proteins = openFile()
     parse(proteins)
-
-if __name__ == "__main__":
-    main()
