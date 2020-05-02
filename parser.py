@@ -17,11 +17,10 @@ class Protein:
 def data():
     proteins = {}
 
-    with open('data/ecod.latest.domains.txt') as f:
+    with open('data/domains_test.txt') as f:
         # Skip the first 5 lines because they are headers
         for line in islice(f, 5, None):
-            line = (line.replace('"', '')).split("\t")
-
+            line = line.split("\t")
             # Get the values in specific columns
             u_id, f_id, pdb, chain = line[0], line[3], line[4], line[5]
 
@@ -31,10 +30,11 @@ def data():
                 chain = re.split(':|,', chain)
                 chain = ','.join([chain[i] for i in range(len(chain)) if i%2 == 0])
 
-            x_level, h_level, t_level = f_id.split(".")[0], f_id.split(".")[1], f_id.split(".")[2]
+            split_f_id = f_id.split(".")
+            x_level, h_level, t_level = split_f_id[0], split_f_id[1], split_f_id[2]
 
             # Some f_id do not have a F group
-            f_level = f_id.split(".")[3] if len(f_id.split(".")) == 4 else "None"
+            f_level = split_f_id[3] if len(split_f_id) == 4 else "None"
 
             # Create X-level (is not dependent on other levels)
             if x_level not in proteins:
@@ -64,7 +64,3 @@ def main():
     # Creates the json file for easy opening of the data
     with open('proteins.json', 'w+', encoding='utf-8') as f:
         json.dump(proteins, f, ensure_ascii=False, indent=4)
-
-
-if __name__ == "__main__":
-    main()
