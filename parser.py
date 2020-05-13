@@ -28,7 +28,7 @@ def calcDist(seq, dict):
 def parse(fasta):
     # Holds records that will be added to fasta file
     records = []
-    levelDict = {}
+    levelDict = defaultdict(list)
     removed = set()
 
     for reads in SeqIO.parse(fasta, "fasta"):
@@ -43,9 +43,6 @@ def parse(fasta):
         x, h, t = f_id[0], f_id[1], f_id[2]
         # Some f_id do not have a F group
         f = f_id[3] if len(f_id) == 4 else "None"
-
-        if level not in levelDict:
-            levelDict[level] = []
 
         # If it has not been looked at already and it has not been removed, get the distance
         if seq not in levelDict[level] and seq not in removed:
