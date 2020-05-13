@@ -11,7 +11,5 @@ else
     fi
 fi
 
-time python3 parser.py "$1"
-echo "Removed fasta duplicates and created directories"
-time python3 pdb.py
-echo "Finished all alignments"
+time python3 directories.py "$1"
+time python3 pdb.py "$1"
